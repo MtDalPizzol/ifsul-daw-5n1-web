@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="/templates/template.xhtml">
+        <ui:define name="titulo">Listagem de Carros</ui:define>
+        <ui:define name="conteudo">
+            <h:form>
+                <h:panelGroup>
+                    <p:messages/>
+                    <p:growl/>
+                    <p:panelGrid columns="2" layout="grid" columnClasses="ui-grid-col-6, ui-grid-col-6" styleClass="ui-panelgrid-blank" style="margin-bottom: 15px;">
+                        <h3>Listagem de Carros</h3>
+                        <p:commandButton value="Adicionar carro" action="#{controleCarro.novo()}"
+                                         ajax="false" icon="ui-icon-plus"
+                                         style="float: right; margin-top: 20px;"/>
+                    </p:panelGrid>
+                    <p:dataTable value="#{controleCarro.dao.lista}" var="obj" reflow="true">
+                        <!-- o valor do atributo value deve apontar para uma lista -->
+                        <p:column headerText="ID" width="35">
+                            <p:outputLabel value="#{obj.id}"/>
+                        </p:column>
+                        <p:column headerText="Placa" width="95">
+                            <p:outputLabel value="#{obj.placa}"/>
+                        </p:column>
+                        <p:column headerText="Renavam" width="115">
+                            <p:outputLabel value="#{obj.renavam}"/>
+                        </p:column>
+                        <p:column headerText="Fabricante">
+                            <p:outputLabel value="#{obj.fabricante}"/>
+                        </p:column>
+                        <p:column headerText="Modelo">
+                            <p:outputLabel value="#{obj.modelo}"/>
+                        </p:column>
+                        <p:column headerText="Ano Modelo" width="130">
+                            <p:outputLabel value="#{obj.anoModelo}"/>
+                        </p:column>
+                        <p:column headerText="Ano de Fabricação" width="180">
+                            <p:outputLabel value="#{obj.anoFabricacao}"/>
+                        </p:column>
+                        <p:column headerText="Ações" width="100">
+                            <div align="center">
+                                <p:commandButton action="#{controleCarro.editar(obj.id)}"
+                                                 icon="ui-icon-pencil" ajax="false" title="Editar"/>
+                                <p:commandButton action="#{controleCarro.remover(obj.id)}"
+                                                 icon="ui-icon-trash" title="Remover"
+                                                 process="@form" update="@form"
+                                                 onclick="if (!confirm('Confirma a exclusão?'))
+                                                             return false"/>
+                            </div>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:form>
+        </ui:define>
+    </ui:composition>    
+
+</html>
+

@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="/templates/template.xhtml">
+        <ui:define name="titulo">Edição de Corretores</ui:define>
+        <ui:define name="conteudo">
+            <h:form>
+                <div align="center">
+                    <p:messages/>
+                    <p:growl/>
+                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                        <f:facet name="header">
+                            <p:outputLabel value="Edição de corretores"/>
+                        </f:facet>
+                        <f:facet name="footer">
+                            <div align="center">
+                                <p:commandButton value="Cancelar"
+                                                 action="#{controleCorretor.cancelar()}"
+                                                 ajax="false" immediate="true"/>
+                                <p:commandButton value="Salvar" icon="ui-icon-disk"
+                                                 action="#{controleCorretor.salvar()}"
+                                                 ajax="false"/>
+                            </div>
+                        </f:facet>
+                        <p:outputLabel value="ID" rendered="#{controleCorretor.objeto.id != null}"/>
+                        <p:inputText value="#{controleCorretor.objeto.id}" size="5" readonly="true"
+                                     rendered="#{controleCorretor.objeto.id != null}"/>
+                        <p:outputLabel value="Nome" for="txtNome"/>
+                        <p:inputText id="txtNome" value="#{controleCorretor.objeto.nome}"
+                                     size="100" maxlength="100" autocomplete="off"
+                                     placeholder="Obrigatório"/>
+                        <p:outputLabel value="CPF" for="txtCpf"/>
+                        <p:inputMask id="txtCpf" value="#{controleCorretor.objeto.cpf}"
+                                     mask="999.999.999-99"
+                                     size="14" maxlength="14" autocomplete="off"
+                                     placeholder="Obrigatório"/>
+                        <p:outputLabel value="RG" for="txtRg"/>
+                        <p:inputText id="txtRg" value="#{controleCorretor.objeto.rg}"
+                                     size="20" maxlength="20" autocomplete="off"/>
+                        <p:outputLabel value="Email" for="txtEmail"/>
+                        <p:inputText id="txtEmail" value="#{controleCorretor.objeto.email}"
+                                     size="100" maxlength="100" autocomplete="off"
+                                     placeholder="Obrigatório"/>
+                        <p:outputLabel value="Telefone" for="txtTelefone"/>
+                        <p:inputMask id="txtTelefone"
+                                     value="#{controleCorretor.objeto.telefone}"
+                                     mask="(99) 99999-9999"
+                                     size="15"
+                                     maxlength="15"
+                                     autocomplete="off"
+                                     placeholder="Obrigatório"/>
+                        <p:outputLabel value="Comissão" for="numComissao"/>
+                        <p:inputNumber
+                            id="numComissao"
+                            value="#{controleCorretor.objeto.percentualComissao}"
+                            symbol="%" 
+                            symbolPosition="s"
+                            emptyValue="empty"
+                            decimalSeparator=","
+                            thousandSeparator="."/>
+                        <p:outputLabel value="Login" for="txtLogin"/>
+                        <p:inputText id="txtLogin" value="#{controleCorretor.objeto.nomeUsuario}"
+                                     size="20" maxlength="20" autocomplete="off"
+                                     placeholder="Obrigatório"/>
+                        <p:outputLabel value="Senha" for="pwdSenha"/>
+                        <p:password id="pwdSenha" value="#{controleCorretor.objeto.senha}"
+                                    size="8" maxlength="8" autocomplete="off"
+                                    placeholder="Obrigatório"/>
+                    </p:panelGrid>
+                </div>
+            </h:form>  
+
+        </ui:define>
+    </ui:composition>    
+
+</html>
+

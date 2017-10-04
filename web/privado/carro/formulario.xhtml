@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="/templates/template.xhtml">
+        <ui:define name="titulo">Edição de Carros</ui:define>
+        <ui:define name="conteudo">
+            <h:form>
+                <div align="center">
+                    <p:messages/>
+                    <p:growl/>
+                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                        <f:facet name="header">
+                            <p:outputLabel value="Edição de Carros"/>
+                        </f:facet>
+                        <f:facet name="footer">
+                            <div align="center">
+                                <p:commandButton value="Cancelar"
+                                                 action="#{controleCarro.cancelar()}"
+                                                 ajax="false" immediate="true"/>
+                                <p:commandButton value="Salvar" icon="ui-icon-disk"
+                                                 action="#{controleCarro.salvar()}"
+                                                 ajax="false"/>
+                            </div>
+                        </f:facet>
+                        <p:outputLabel value="ID" rendered="#{controleCarro.objeto.id != null}"/>
+                        <p:inputText value="#{controleCarro.objeto.id}" size="5" readonly="true"
+                                     rendered="#{controleCarro.objeto.id != null}"/>
+                        <p:outputLabel value="Fabricante" for="txtFabricante"/>
+                        <p:inputText id="txtFabricante" value="#{controleCarro.objeto.fabricante}"
+                                     size="20" maxlength="20" autocomplete="off"
+                                     placeholder="Obrigatório"/>
+                        <p:outputLabel value="Modelo" for="txtModelo"/>
+                        <p:inputText id="txtModelo" value="#{controleCarro.objeto.modelo}"
+                                     size="20" maxlength="20" autocomplete="off"
+                                     placeholder="Obrigatório"/>
+                        <p:outputLabel value="Placa" for="txtPlaca"/>
+                        <p:inputText id="txtPlaca" value="#{controleCarro.objeto.placa}"
+                                     size="8" maxlength="8" autocomplete="off"
+                                     placeholder="Obrigatório"/>
+                        <p:outputLabel value="Renavam" for="txtRenavam"/>
+                        <p:inputText id="txtRenavam" value="#{controleCarro.objeto.renavam}"
+                                     size="11" maxlength="11" autocomplete="off"
+                                     placeholder="Obrigatório"/>
+                        <p:outputLabel value="Ano modelo" for="txtAnoModelo"/>
+                        <p:inputText id="txtAnoModelo" value="#{controleCarro.objeto.anoModelo}"
+                                     size="4" maxlength="4" autocomplete="off"
+                                     placeholder="Obrigatório"/>
+                        <p:outputLabel value="Ano de fabricação" for="txtAnoFabricacao"/>
+                        <p:inputText id="txtAnoFabricacao" value="#{controleCarro.objeto.anoFabricacao}"
+                                     size="4" maxlength="4" autocomplete="off"
+                                     placeholder="Obrigatório"/>
+                        
+                        <p:outputLabel value="Proprietário" for="selectProprietario"/>                           
+                        <p:selectOneMenu id="selectProprietario" value="#{controleCarro.objeto.proprietario}">
+                            <f:converter converterId="converterPessoa"/>
+                            <f:selectItem noSelectionOption="true" itemLabel="Selecione o proprietário"/>
+                            <f:selectItems value="#{controleCarro.daoPessoa.lista}" var="e" itemLabel="#{e.nome}"/>
+                        </p:selectOneMenu>
+                        
+                    </p:panelGrid>
+                </div>
+            </h:form>  
+
+        </ui:define>
+    </ui:composition>    
+
+</html>
+
