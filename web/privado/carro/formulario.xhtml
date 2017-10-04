@@ -53,14 +53,37 @@
                         <p:inputText id="txtAnoFabricacao" value="#{controleCarro.objeto.anoFabricacao}"
                                      size="4" maxlength="4" autocomplete="off"
                                      placeholder="Obrigatório"/>
-                        
+
                         <p:outputLabel value="Proprietário" for="selectProprietario"/>                           
                         <p:selectOneMenu id="selectProprietario" value="#{controleCarro.objeto.proprietario}">
                             <f:converter converterId="converterPessoa"/>
                             <f:selectItem noSelectionOption="true" itemLabel="Selecione o proprietário"/>
                             <f:selectItems value="#{controleCarro.daoPessoa.lista}" var="e" itemLabel="#{e.nome}"/>
                         </p:selectOneMenu>
+
+                        <p:outputLabel value="Acessórios" for="selectAcessorios" />
+                        <p:selectManyCheckbox converter="converterAcessorio" id="selectAcessorios" value="#{controleCarro.objeto.acessorios}" layout="grid" columns="3">
+                            <f:selectItems value="#{controleCarro.daoAcessorio.lista}" var="acessorio" itemLabel="#{acessorio.descricao}" itemValue="#{acessorio}" />
+                            <f:attribute name="collectionType" value="java.util.ArrayList"/>
+                        </p:selectManyCheckbox>
                         
+<!--                        <h:outputLabel for="cbxAcessorios" value="Acessórios:" />
+                        <p:selectCheckboxMenu id="cbxAcessorios" value="#{controleCarro.objeto.acessorios}" label="Acessorios" multiple="true"
+                                              filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+                            <f:selectItems value="#{controleCarro.daoAcessorio.lista}" itemLabel="#{acessorio.descricao}" itemValue="#{acessorio}" />
+                        </p:selectCheckboxMenu>
+
+                        <p:dialog header="Selected Items" modal="true" showEffect="fade" hideEffect="fade" widgetVar="itemDialog" width="250">
+                            <p:outputPanel id="displayItems">
+                                <p:dataList value="#{controleCarro.objeto.acessorios}}" var="acessorio"  emptyMessage="Nenhum acessório selecionado">
+                                    <f:facet name="header">
+                                        Acessórios
+                                    </f:facet>
+                                    #{acessorio}
+                                </p:dataList>
+                            </p:outputPanel>
+                        </p:dialog>-->
+
                     </p:panelGrid>
                 </div>
             </h:form>  

@@ -1,5 +1,6 @@
 package br.edu.ifsul.controle;
 
+import br.edu.ifsul.dao.AcessorioDAO;
 import br.edu.ifsul.dao.CarroDAO;
 import br.edu.ifsul.dao.PessoaDAO;
 import br.edu.ifsul.modelo.Carro;
@@ -21,10 +22,12 @@ public class ControleCarro implements Serializable {
     private CarroDAO dao;
     private Carro objeto;
     private PessoaDAO daoPessoa;
+    private AcessorioDAO daoAcessorio;
     
     public ControleCarro(){
         dao = new CarroDAO();
         daoPessoa = new PessoaDAO();
+        daoAcessorio = new AcessorioDAO();
     }
     
     public String listar(){
@@ -86,6 +89,14 @@ public class ControleCarro implements Serializable {
 
     public void setDaoPessoa(PessoaDAO daoPessoa) {
         this.daoPessoa = daoPessoa;
+    }
+
+    public AcessorioDAO getDaoAcessorio() {
+        return daoAcessorio;
+    }
+
+    public void setDaoAcessorio(AcessorioDAO daoAcessorio) {
+        this.daoAcessorio = daoAcessorio;
     }
 
 }
