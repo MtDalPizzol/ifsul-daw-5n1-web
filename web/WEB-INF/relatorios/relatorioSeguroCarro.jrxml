@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioSeguroCarro" pageWidth="550" pageHeight="842" columnWidth="550" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d395e92a-a133-41cb-ac0f-22071d0d2cf6">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="proprietario" class="br.edu.ifsul.modelo.Pessoa">
+		<fieldDescription><![CDATA[proprietario]]></fieldDescription>
+	</field>
+	<field name="renavam" class="java.lang.String">
+		<fieldDescription><![CDATA[renavam]]></fieldDescription>
+	</field>
+	<field name="anoFabricacao" class="java.lang.Integer">
+		<fieldDescription><![CDATA[anoFabricacao]]></fieldDescription>
+	</field>
+	<field name="anoModelo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[anoModelo]]></fieldDescription>
+	</field>
+	<field name="fabricante" class="java.lang.String">
+		<fieldDescription><![CDATA[fabricante]]></fieldDescription>
+	</field>
+	<field name="modelo" class="java.lang.String">
+		<fieldDescription><![CDATA[modelo]]></fieldDescription>
+	</field>
+	<field name="placa" class="java.lang.String">
+		<fieldDescription><![CDATA[placa]]></fieldDescription>
+	</field>
+	<field name="acessorios" class="java.util.List">
+		<fieldDescription><![CDATA[acessorios]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="40" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="550" height="40" uuid="7cc1df80-3077-4771-b857-51a37e84fa61"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="10" y="0" width="535" height="40" uuid="47c7da94-5ee5-4515-a14c-5b2a831131a0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Dados do carro]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="120" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="550" height="120" uuid="dd452009-87b9-4166-afda-d8bab06e8788"/>
+			</rectangle>
+			<textField>
+				<reportElement x="80" y="0" width="200" height="30" uuid="e5056129-b6ea-45a5-8441-f454ae13115a"/>
+				<textFieldExpression><![CDATA[$F{proprietario}.getNome()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="0" width="70" height="30" uuid="91dd6e02-961f-47d0-90bf-8c8470a500ea"/>
+				<text><![CDATA[Proprietário:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="60" width="100" height="30" uuid="acc36b0d-686f-4f20-b9d5-4c3e017715ab"/>
+				<textFieldExpression><![CDATA[$F{placa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="60" width="70" height="30" uuid="a91a3233-4ad4-45de-b616-1a54fd3558e4"/>
+				<text><![CDATA[Placa:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="90" width="100" height="30" uuid="c509f307-81ad-4706-80dd-8ff660ae3a22"/>
+				<textFieldExpression><![CDATA[$F{renavam}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="90" width="70" height="30" uuid="2c927718-d22b-4cbe-9595-538fb4142e60"/>
+				<text><![CDATA[Renavam:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="445" y="0" width="100" height="30" uuid="bbbbd732-0ade-4b16-95c1-215bbbd132b6"/>
+				<textFieldExpression><![CDATA[$F{fabricante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="345" y="0" width="100" height="30" uuid="7c64533a-47c0-4662-aba5-19717dcf3a5b"/>
+				<text><![CDATA[Fabricante:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="445" y="30" width="100" height="30" uuid="076459e7-b9a2-4bc3-b55c-7a289e20cc52"/>
+				<textFieldExpression><![CDATA[$F{modelo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="345" y="30" width="100" height="30" uuid="77a0b6d2-c09b-4663-82db-afa27b77da12"/>
+				<text><![CDATA[Modelo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="444" y="60" width="100" height="30" uuid="a77f7a81-9eca-42ce-baba-ffe800b438c7"/>
+				<textFieldExpression><![CDATA[$F{anoFabricacao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="345" y="60" width="100" height="30" uuid="475c7364-6ab2-4cfb-997c-75890451698b"/>
+				<text><![CDATA[Ano de fabricação:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="444" y="90" width="100" height="30" uuid="352df971-215c-4969-ad48-20cdfa681890"/>
+				<textFieldExpression><![CDATA[$F{anoModelo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="345" y="90" width="100" height="30" uuid="a06e91ab-54c1-4afa-b1f8-bf36f7626112"/>
+				<text><![CDATA[Ano do modelo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="30" width="200" height="30" uuid="8d7314a4-7b77-4d8d-86a2-145a93e1cfbb"/>
+				<textFieldExpression><![CDATA[$F{proprietario}.getEmail()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="30" width="70" height="30" uuid="d4ac0908-fbec-4629-8019-088548cca5e2"/>
+				<text><![CDATA[Email:]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

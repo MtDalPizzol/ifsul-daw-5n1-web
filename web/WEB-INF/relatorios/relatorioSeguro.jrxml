@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioSeguro" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e0a2f644-e11c-4d57-9272-93a017b53dd2">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DadosSeguro"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="carro" class="br.edu.ifsul.modelo.Carro">
+		<fieldDescription><![CDATA[carro]]></fieldDescription>
+	</field>
+	<field name="fimVigencia" class="java.util.Calendar">
+		<fieldDescription><![CDATA[fimVigencia]]></fieldDescription>
+	</field>
+	<field name="data" class="java.util.Calendar">
+		<fieldDescription><![CDATA[data]]></fieldDescription>
+	</field>
+	<field name="inicioVigencia" class="java.util.Calendar">
+		<fieldDescription><![CDATA[inicioVigencia]]></fieldDescription>
+	</field>
+	<field name="valorTotal" class="java.lang.Double">
+		<fieldDescription><![CDATA[valorTotal]]></fieldDescription>
+	</field>
+	<field name="corretor" class="br.edu.ifsul.modelo.Corretor">
+		<fieldDescription><![CDATA[corretor]]></fieldDescription>
+	</field>
+	<field name="coberturas" class="java.util.List">
+		<fieldDescription><![CDATA[coberturas]]></fieldDescription>
+	</field>
+	<field name="valorFipe" class="java.lang.Double">
+		<fieldDescription><![CDATA[valorFipe]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="81" uuid="7098e02f-9b4c-4009-8367-023e88a79d7a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="79" uuid="5f5dcbf0-bd11-4de5-b9d2-57bc2c960791"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relatório de seguro]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="359" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="130" width="555" height="160" uuid="3031c524-85f7-4329-9fc7-a7733e13d63e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="100" width="555" height="30" uuid="7b2c2cf5-a56e-4ec1-9b08-e0235aa08407"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="100" uuid="61e01a44-fe63-409e-bf8a-de63a31de6b2"/>
+			</rectangle>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="140" y="10" width="110" height="30" uuid="1519e5a2-9713-4c41-8b19-22b0726ff4e2"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data}.getTime()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="10" width="130" height="30" uuid="1fe6151a-d80b-4954-bb2e-db6db02a3057"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="140" y="40" width="110" height="30" uuid="f817dac8-cfb8-4f4d-b1bd-129baea74cfd"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inicioVigencia}.getTime()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="40" width="130" height="30" uuid="1759f8a9-870a-405a-baee-8c4cc450bdf6"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Início da vigência:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="140" y="70" width="110" height="30" uuid="74f030cb-d3cf-406c-a6fe-5c439a92a58e"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fimVigencia}.getTime()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="70" width="130" height="30" uuid="b3030a9e-16ad-49c8-bb0d-3b7ec7878cd2"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Fim da vigência:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="329" y="10" width="214" height="30" uuid="8bc1d8da-9ca7-4e76-8ccd-626e3ae939e6"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{corretor}.getNome()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="250" y="10" width="78" height="30" uuid="3604bcb7-ed79-45a2-bba8-8a7e3de7d5df"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Corretor:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="109" y="200" width="171" height="30" uuid="88826c04-da00-4fd9-9138-5ec781549c59"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carro}.getPlaca()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="200" width="99" height="30" uuid="24bbce0d-93a9-4a50-ad99-f788857dd249"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Placa:]]></text>
+			</staticText>
+			<textField pattern="R$ 0.00">
+				<reportElement x="329" y="70" width="212" height="30" uuid="b816176d-a09f-42d4-bee7-57260b4103eb"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorTotal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="250" y="70" width="79" height="30" uuid="f40486cb-a2b2-4f98-9b15-706023f2128c"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Valor total:]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="290" width="555" height="29" uuid="f5e2c282-5da7-4b23-ae0e-ab8221353cbb"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(
+	(java.util.List<br.edu.ifsul.modelo.Cobertura>)$F{coberturas}
+)]]></dataSourceExpression>
+				<subreportExpression><![CDATA["relatorioSeguroCoberturas.jasper"]]></subreportExpression>
+			</subreport>
+			<textField pattern="R$ 0.00">
+				<reportElement x="329" y="40" width="212" height="30" uuid="2599f362-fbb7-4f9f-99c3-e334d78eda0b"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorFipe}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="250" y="40" width="78" height="30" uuid="7a32a7b8-c0cc-49e5-a369-bad6ff6029b8"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Valor fipe:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="379" y="200" width="163" height="30" uuid="2cbbc457-506d-46e7-be83-03579c2808e5"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carro}.getRenavam()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="200" width="99" height="30" uuid="637c29e9-16b5-4850-8a76-c091f8b0b3c7"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Renavam:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="140" width="432" height="30" uuid="39c09d58-5558-43e5-9dff-39edf041615c"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carro}.getProprietario().getNome()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="140" width="100" height="30" uuid="89ddbea6-0c7c-4461-81ac-42cd4fc17b43"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Proprietário:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="100" width="532" height="30" uuid="94f26e23-4e07-4bd4-8390-d035c50b9f3b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dados do carro]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="230" width="170" height="30" uuid="ea57abf7-4561-4eb5-b1ad-317c6d6de3b1"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carro}.getFabricante()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="230" width="99" height="30" uuid="20ebac78-e15c-417d-97a9-830793d02f83"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Fabricante:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="419" y="230" width="123" height="30" uuid="a89510f3-b380-49be-847f-8dc5291f013e"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carro}.getModelo()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="230" width="139" height="30" uuid="90bd016b-f756-4f73-9d70-d6ce8abec43a"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Mdelo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="149" y="260" width="131" height="30" uuid="bae7a9b2-10a1-4af8-a239-6a190ca7a8a6"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carro}.getAnoFabricacao()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="260" width="139" height="30" uuid="2cc4e6db-75c1-41b6-b673-338e7d792e8d"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Ano de fabricação:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="419" y="260" width="123" height="30" uuid="df157fba-2c7e-41ee-8b0d-76a9de599008"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carro}.getAnoModelo()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="260" width="139" height="30" uuid="2c696396-6710-408a-a280-7149ec1b5d9f"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Ano do modelo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="170" width="432" height="30" uuid="146dfca5-fee5-477b-ab3d-0575bab1f2fe"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carro}.getProprietario().getEmail()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="170" width="100" height="30" uuid="67060760-e421-428a-99ff-9b1557199167"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Email:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="355" y="12" width="100" height="30" uuid="3aa03ea1-1313-43c6-a54f-b9b293e4417f"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="455" y="12" width="100" height="30" uuid="112cbf1a-5d0b-43a7-915d-45ae17954739"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="10" y="12" width="100" height="30" uuid="b55a6d14-6950-4c36-8ae3-a337380ad1b5"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

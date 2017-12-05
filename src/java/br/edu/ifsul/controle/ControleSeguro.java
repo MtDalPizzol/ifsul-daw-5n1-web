@@ -8,8 +8,12 @@ import br.edu.ifsul.modelo.Corretor;
 import br.edu.ifsul.modelo.Seguro;
 import br.edu.ifsul.modelo.Cobertura;
 import br.edu.ifsul.util.Util;
+import br.edu.ifsul.util.UtilRelatorios;
 // import br.edu.ifsul.util.UtilRelatorios;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -90,13 +94,13 @@ public class ControleSeguro implements Serializable {
         setObjeto(getDao().localizar(id));        
     }
     
-//    public void imprimir(Integer id) {
-//        objeto = dao.localizar(id);
-//        List<Seguro> lista = new ArrayList<>();
-//        lista.add(objeto);
-//        HashMap parametros = new HashMap();
-//        UtilRelatorios.imprimeRelatorio("relatorioSeguro", parametros, lista);
-//    }
+    public void imprimir(Integer id) {
+        objeto = dao.localizar(id);
+        List<Seguro> lista = new ArrayList<>();
+        lista.add(objeto);
+        HashMap parametros = new HashMap();
+        UtilRelatorios.imprimeRelatorio("relatorioSeguro", parametros, lista);
+    }
     
     public void remover(Integer id){
         setObjeto(getDao().localizar(id));

@@ -93,6 +93,11 @@
                     </p:column>
                     <p:column headerText="Ações">
                         <div align="center">
+                            <p:commandButton icon="ui-icon-print"
+                                             ajax="false"
+                                             action="#{controleSeguro.imprimir(obj.id)}"
+                                             onclick="this.form.target = '_blank';"/>
+
                             <p:commandButton actionListener="#{controleSeguro.editar(obj.id)}"
                                              icon="ui-icon-pencil"
                                              title="Editar"

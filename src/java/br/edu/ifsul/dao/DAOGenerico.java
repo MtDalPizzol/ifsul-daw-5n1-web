@@ -23,7 +23,7 @@ public class DAOGenerico<T> {
     protected String mensagem = "";
     protected String ordem = "id";
     protected String filtro = "";
-    protected Integer maximoObjetos = 3;
+    protected Integer maximoObjetos = 10;
     protected Integer posicaoAtual = 0;
     protected Integer totalObjetos = 0;
 
