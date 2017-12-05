@@ -1,0 +1,302 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="/templates/template.xhtml">
+        <ui:define name="titulo">Listagem de Seguros</ui:define>
+        <ui:define name="conteudo">
+            <h:form id="formListagem">
+                <p:messages/>
+                <p:growl/>
+                <p:commandButton value="Novo seguro"
+                                 actionListener="#{controleSeguro.novo()}"
+                                 icon="ui-icon-plus"
+                                 process="@this"
+                                 update=":formEdicao"
+                                 oncomplete="PF('dlg').show();"/>
+                <div align="center" style="padding: 16px;">
+                    <p:panelGrid columns="11" styleClass="ui-panelgrid-blank">
+                        <p:outputLabel value="Ordem: "/>
+                        <p:selectOneMenu value="#{controleSeguro.dao.ordem}">
+                            <f:selectItem itemLabel="ID" itemValue="id"/>
+                            <p:ajax update="listagem"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Filtro: "/>
+                        <p:inputText value="#{controleSeguro.dao.filtro}" size="20">
+                            <p:ajax event="keyup" delay="400" update="listagem"/>
+                        </p:inputText>
+                        <p:outputLabel value="Itens por página"/>
+                        <p:inputText value="#{controleSeguro.dao.maximoObjetos}" size="5">
+                            <p:ajax event="keyup" update="listagem"/>
+                        </p:inputText>
+                        <p:commandButton value="Filtrar" icon="ui-icon-search" update="listagem"/>
+                        <p:commandButton icon="ui-icon-seek-first" update="listagem" actionListener="#{controleSeguro.dao.primeiro()}"/>
+                        <p:commandButton icon="ui-icon-seek-prev" update="listagem" actionListener="#{controleSeguro.dao.anterior()}"/>
+                        <p:commandButton icon="ui-icon-seek-next" update="listagem" actionListener="#{controleSeguro.dao.proximo()}"/>
+                        <p:commandButton icon="ui-icon-seek-end" update="listagem" actionListener="#{controleSeguro.dao.ultimo()}"/>
+                    </p:panelGrid>
+                    <p:panelGrid columns="11" styleClass="ui-panelgrid-blank" style="margin-top: 16px">
+                        <p:outputLabel value="Corretor" for="selectCorretor"/>
+                        <p:selectOneMenu id="selectCorretor" value="#{controleSeguro.dao.filtroCorretor}">
+                            <f:converter converterId="converterCorretor"/>
+                            <f:selectItem noSelectionOption="true" itemLabel="Selecione um corretor"/>
+                            <f:selectItems value="#{controleSeguro.daoCorretor.listaTodos}"
+                                           var="c"
+                                           itemLabel="#{c.nome}"/>
+                            <p:ajax update="listagem"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Filtrar por valor"/>
+                        <p:selectBooleanCheckbox value="#{controleSeguro.dao.filtroValor}">
+                            <p:ajax process="@form" update="listagem"/>
+                        </p:selectBooleanCheckbox>
+                        <p:outputLabel id="displayRange" value="entre #{controleSeguro.dao.filtroValorMin} e #{controleSeguro.dao.filtroValorMax}" />
+                        <h:panelGrid columns="1" style="margin-bottom: 10px">
+                            <p:slider for="hdnFiltroMin,hdnFiltroMax" maxValue="10000" step="1" display="displayRange" style="width: 400px" range="true" displayTemplate="entre {min} e {max}">
+                                <p:ajax event="slideEnd" process="@form" update="listagem"/>
+                            </p:slider>
+                        </h:panelGrid>
+                        <h:inputHidden id="hdnFiltroMin" value="#{controleSeguro.dao.filtroValorMin}" />
+                        <h:inputHidden id="hdnFiltroMax" value="#{controleSeguro.dao.filtroValorMax}" />
+                    </p:panelGrid>
+                </div>
+
+                <p:dataTable
+                    id="listagem"
+                    value="#{controleSeguro.dao.listaObjetos}"
+                    var="obj">
+                    <f:facet name="header">
+                        <p:outputLabel value="Listagem de Seguros"/>
+                    </f:facet>
+                    <f:facet name="footer">
+                        <p:outputLabel value="#{controleSeguro.dao.mensagemNavegacao}"/>
+                    </f:facet>
+                    <!-- o valor do atributo value deve apontar para uma lista -->
+                    <p:column headerText="ID" width="35">
+                        <p:outputLabel value="#{obj.id}"/>
+                    </p:column>
+                    <p:column headerText="Data">
+                        <p:outputLabel value="#{obj.data}">
+                            <f:converter converterId="converterCalendar" />
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column headerText="Placa do carro">
+                        <p:outputLabel value="#{obj.carro.placa}"/>
+                    </p:column>
+                    <p:column headerText="Corretor">
+                        <p:outputLabel value="#{obj.corretor.nome}"/>
+                    </p:column>
+                    <p:column headerText="Valor Total">
+                        <p:outputLabel value="#{obj.valorTotal}"/>
+                    </p:column>
+                    <p:column headerText="Ações">
+                        <div align="center">
+                            <p:commandButton actionListener="#{controleSeguro.editar(obj.id)}"
+                                             icon="ui-icon-pencil"
+                                             title="Editar"
+                                             update=":formEdicao"
+                                             process="@this"
+                                             oncomplete="PF('dlg').show();"/>
+                            <p:commandButton action="#{controleSeguro.remover(obj.id)}"
+                                             icon="ui-icon-trash"
+                                             title="Remover"
+                                             process="@form"
+                                             update="@form"
+                                             onclick="if (!confirm('Confirma a exclusão?'))
+                                                         return false"/>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+        <ui:define name="dialogos">
+            <p:dialog header="Edição de Seguros"
+                      widgetVar="dlg"
+                      resizable="false"
+                      modal="true"
+                      width="800"
+                      height="600">
+                <h:form id="formEdicao">
+                    <p:growl id="growl"/>
+                    <p:tabView id="tab">
+                        <p:tab title="Dados principais">
+                            <div align="center">
+                                <p:panelGrid columns="2">
+                                    <f:facet name="footer">
+                                        <div align="center" style="padding: 16px;">
+                                            <p:commandButton value="Salvar"
+                                                             actionListener="#{controleSeguro.salvar()}"
+                                                             update=":formListagem formEdicao"
+                                                             icon="ui-icon-disk"
+                                                             oncomplete="if (!args.validationFailed) { PF('dlg').hide(); }"/>
+                                        </div>
+                                    </f:facet>
+
+                                    <p:outputLabel
+                                        value="ID"
+                                        for="txtID"/>
+                                    <p:inputText
+                                        id="txtID"
+                                        value="#{controleSeguro.objeto.id}"
+                                        size="5"
+                                        readonly="true"/>
+
+                                    <p:outputLabel
+                                        value="Data"
+                                        for="txtData"/>
+                                    <p:calendar
+                                        id="txtData"
+                                        value="#{controleSeguro.objeto.data}"
+                                        mask="true"
+                                        pattern="dd/MM/yyyy"
+                                        navigator="true">
+                                        <f:converter
+                                            converterId="converterCalendar"/>
+                                    </p:calendar>  
+
+                                    <p:outputLabel
+                                        value="Início da vigência"
+                                        for="txtInicioVigencia"/>
+                                    <p:calendar
+                                        id="txtInicioVigencia"
+                                        value="#{controleSeguro.objeto.inicioVigencia}"
+                                        mask="true"
+                                        pattern="dd/MM/yyyy"
+                                        navigator="true">
+                                        <f:converter
+                                            converterId="converterCalendar"/>
+                                    </p:calendar>                         
+
+                                    <p:outputLabel
+                                        value="Fim da vigência"
+                                        for="txtFimVigencia"/>
+                                    <p:calendar
+                                        id="txtFimVigencia"
+                                        value="#{controleSeguro.objeto.fimVigencia}"
+                                        mask="true"
+                                        pattern="dd/MM/yyyy"
+                                        navigator="true">
+                                        <f:converter
+                                            converterId="converterCalendar"/>
+                                    </p:calendar>
+
+                                    <p:outputLabel value="Corretor" for="selectCorretor"/>
+                                    <p:selectOneMenu id="selectCorretor" value="#{controleSeguro.objeto.corretor}">
+                                        <f:converter converterId="converterCorretor"/>
+                                        <f:selectItem noSelectionOption="true" itemLabel="Selecione um corretor"/>
+                                        <f:selectItems value="#{controleSeguro.daoCorretor.listaTodos}"
+                                                       var="c"
+                                                       itemLabel="#{c.nome}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Carro" for="selectCarro"/>
+                                    <p:selectOneMenu id="selectCarro" value="#{controleSeguro.objeto.carro}">
+                                        <f:converter converterId="converterCarro"/>
+                                        <f:selectItem noSelectionOption="true" itemLabel="Selecione um carro"/>
+                                        <f:selectItems value="#{controleSeguro.daoCarro.listaTodos}"
+                                                       var="c"
+                                                       itemLabel="#{c.placa}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel
+                                        value="Valor Fipe"
+                                        for="txtValorFipe"/>
+                                    <p:inputNumber
+                                        value="#{controleSeguro.objeto.valorFipe}"
+                                        id="txtValorFipe"
+                                        size="20"
+                                        maxlength="20"
+                                        placeholder="Obrigatório"
+                                        decimalSeparator=","
+                                        thousandSeparator="."/>
+
+                                    <p:outputLabel
+                                        value="Valor total"
+                                        for="txtValorTotal"/>
+                                    <p:inputNumber
+                                        value="#{controleSeguro.objeto.valorTotal}"
+                                        id="txtValorTotal"
+                                        size="20"
+                                        maxlength="20"
+                                        placeholder="Obrigatório"
+                                        decimalSeparator=","
+                                        thousandSeparator="."
+                                        readonly="true"/>                                    
+                                </p:panelGrid>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Coberturas">
+                            <p:dataTable
+                                id="listaCoberturas"
+                                value="#{controleSeguro.objeto.coberturas}"
+                                var="cobertura"
+                                rowIndexVar="idx">
+                                <f:facet name="header">
+                                    <p:commandButton
+                                        value="Nova cobertura"
+                                        actionListener="#{controleSeguro.novaCobertura()}"
+                                        update=":formCobertura"
+                                        icon="ui-icon-plus"
+                                        id="btnNovaCobertura"
+                                        process="@this"
+                                        oncomplete="PF('dlgCobertura').show()"/>
+                                </f:facet>
+                                <p:column headerText="Descrição">
+                                    <p:outputLabel value="#{cobertura.descricao}"/>
+                                </p:column>
+                                <p:column headerText="Valor">
+                                    <p:outputLabel value="#{cobertura.valor}"/>
+                                </p:column>
+                                <p:column headerText="Ações">
+                                    <div align="center">
+                                        <p:commandButton id="btnAlterarCobertura" icon="ui-icon-pencil"
+                                                         actionListener="#{controleSeguro.alterarCobertura(idx)}"
+                                                         update=":formCobertura" process="btnAlterarCobertura"
+                                                         oncomplete="PF('dlgCobertura').show();"/>
+                                        <p:commandButton actionListener="#{controleSeguro.removerCobertura(idx)}"
+                                                         update="listaCoberturas :formEdicao:growl :formEdicao:tab:txtValorTotal"
+                                                         process="@this"
+                                                         icon="ui-icon-trash"/>
+                                    </div>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                    </p:tabView>
+                </h:form>
+            </p:dialog>
+            <p:dialog header="Edição de coberturas" widgetVar="dlgCobertura" modal="true" resizable="false">
+                <h:form id="formCobertura">
+                    <p:growl/>
+                    <p:panelGrid columns="2">
+                        <f:facet name="footer">
+                            <div align="center" style="padding: 16px;">
+                                <p:commandButton
+                                    value="Salvar cobertura"
+                                    actionListener="#{controleSeguro.salvarCobertura()}"
+                                    update=":formEdicao:tab:listaCoberturas formCobertura :formEdicao:tab:txtValorTotal"
+                                    process="@form"
+                                    oncomplete="if (!args.validationFailed) { PF('dlgCobertura').hide(); }"/>
+                            </div>
+                        </f:facet>
+
+                        <p:outputLabel value="Descrição" for="edtDescricao"/>
+                        <p:editor id="edtDescricao" widgetVar="edtDescricao" value="#{controleSeguro.cobertura.descricao}" width="600" />
+
+                        <p:outputLabel value="Valor" for="numValor"/>
+                        <p:inputNumber id="numValor"
+                                       value="#{controleSeguro.cobertura.valor}"
+                                       decimalSeparator=","
+                                       thousandSeparator="."
+                                       symbol=" BRL"
+                                       symbolPosition="s"/>
+
+                    </p:panelGrid>
+                </h:form>
+            </p:dialog>                
+        </ui:define>
+    </ui:composition>    
+
+</html>
+

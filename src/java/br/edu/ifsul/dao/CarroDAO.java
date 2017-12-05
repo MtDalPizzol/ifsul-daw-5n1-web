@@ -1,11 +1,8 @@
 package br.edu.ifsul.dao;
 
-import br.edu.ifsul.jpa.EntityManagerUtil;
 import br.edu.ifsul.modelo.Carro;
-import br.edu.ifsul.util.Util;
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.EntityManager;
 
 /**
  *
@@ -13,77 +10,38 @@ import javax.persistence.EntityManager;
  * @email jorge.bavaresco@passofundo.ifsul.edu.br
  * @organization IFSUL - Campus Passo Fundo
  */
-public class CarroDAO implements Serializable {
+public class CarroDAO<T> extends DAOGenerico<Carro> implements Serializable {
 
-    private String mensagem = "";
-    private EntityManager em;
-    
-    public CarroDAO(){
-        em = EntityManagerUtil.getEntityManager();
+    public CarroDAO() {
+        super();
+        classePersistente = Carro.class;
+        ordem = "placa";
     }
     
-    public List<Carro> getLista(){
-        return em.createQuery("from Carro order by placa").getResultList();
-    }
-    
-    public boolean salvar(Carro obj){
-        try {
-            em.getTransaction().begin();
-            if (obj.getId() == null){
-                em.persist(obj);
+    public List<Carro> getListaObjetos() {
+        String jpql = "from " + classePersistente.getCanonicalName();
+        String where = "";
+        
+        filtro = filtro.replaceAll("[-;']", "");
+        
+        if (filtro.length() > 0) {
+            if (ordem.equals("id") || ordem.equals("anoFabricacao") || ordem.equals("anoModelo")) {
+                try {
+                    Integer.parseInt(filtro);
+                    where += " where " + ordem + " = '" + filtro + "'";
+                } catch (Exception e) {
+                }
             } else {
-                em.merge(obj);
-            }
-            em.getTransaction().commit();
-            mensagem = "Carro persistido com sucesso!";
-            return true;
-        } catch (Exception e){
-            if (em.getTransaction().isActive() == false){
-                em.getTransaction().begin();
-            }
-            em.getTransaction().rollback();
-            mensagem = "Erro ao persistir carro: " +
-                    Util.getMensagemErro(e);
-            return false;
+                where += " where upper(" + ordem + ") like '%" + filtro.toUpperCase() + "%' ";                
+            }                        
         }
+        
+        jpql += where;
+        jpql += " order by " + ordem;
+        
+        totalObjetos = em.createQuery(jpql).getResultList().size();
+        return em.createQuery(jpql).setFirstResult(posicaoAtual).setMaxResults(maximoObjetos).getResultList();
     }
     
-    public boolean remover(Carro obj){
-        try {
-            em.getTransaction().begin();
-            em.remove(obj);
-            em.getTransaction().commit();
-            mensagem = "Carro removido com sucesso!";
-            return true;
-        } catch (Exception e){
-            if (em.getTransaction().isActive() == false){
-                em.getTransaction().begin();
-            }
-            em.getTransaction().rollback();
-            mensagem = "Erro ao remover carro: " +
-                    Util.getMensagemErro(e);
-            return false;
-        }
-    }  
     
-    public Carro localizar(Integer id){
-        return em.find(Carro.class, id);
-    }
-    
-
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
-
-    public EntityManager getEm() {
-        return em;
-    }
-
-    public void setEm(EntityManager em) {
-        this.em = em;
-    }
 }

@@ -18,41 +18,37 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class ControleCorretor implements Serializable {
     
-    private CorretorDAO dao;
+    private CorretorDAO<Corretor> dao;
     private Corretor objeto;
-    // private EstadoDAO daoEstado;
     
     public ControleCorretor(){
         dao = new CorretorDAO();
-        // daoEstado = new EstadoDAO();
     }
     
     public String listar(){
         return "/privado/corretor/listar?faces-redirect=true";
     }
     
-    public String novo(){
-        objeto = new Corretor();
-        return "formulario?faces-redirect=true";
+    public void novo(){
+        objeto = new Corretor();        
     }
     
-    public String salvar(){
-        if (dao.salvar(objeto)){
+    public void salvar(){
+        boolean persistiu;
+        if (objeto.getId() == null) {
+            persistiu = dao.persist(objeto);
+        } else {
+            persistiu = dao.merge(objeto);
+        }
+        if (persistiu){
             Util.mensagemInformacao(dao.getMensagem());
-            return "listar?faces-redirect=true";
         } else {
             Util.mensagemErro(dao.getMensagem());
-            return "formulario?faces-redirect=true";
         }
     }
     
-    public String cancelar(){
-        return "listar?faces-redirect=true";
-    }
-    
-    public String editar(Integer id){
-        objeto = dao.localizar(id);
-        return "formulario?faces-redirect=true";
+    public void editar(Integer id){
+        objeto = dao.localizar(id);        
     }
     
     public void remover(Integer id){

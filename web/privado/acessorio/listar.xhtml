@@ -3,22 +3,55 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="/templates/template.xhtml">
         <ui:define name="titulo">Listagem de Acessórios</ui:define>
         <ui:define name="conteudo">
-            <h:form>
+            <h:form id="formListagem">
                 <h:panelGroup>
                     <p:messages/>
                     <p:growl/>
-                    <p:panelGrid columns="2" layout="grid" columnClasses="ui-grid-col-6, ui-grid-col-6" styleClass="ui-panelgrid-blank" style="margin-bottom: 15px;">
-                        <h3>Listagem de Acessórios</h3>
-                        <p:commandButton value="Adicionar acessório" action="#{controleAcessorio.novo()}"
-                                         ajax="false" icon="ui-icon-plus"
-                                         style="float: right; margin-top: 20px;"/>
-                    </p:panelGrid>
-                    <p:dataTable value="#{controleAcessorio.dao.lista}" var="obj" reflow="true">
+                    <p:commandButton value="Novo acessório"
+                                     actionListener="#{controleAcessorio.novo()}"
+                                     icon="ui-icon-plus"
+                                     process="@this"
+                                     update=":formEdicao"
+                                     oncomplete="PF('dlg').show();"/>   
+
+                    <div align="center" style="padding: 16px;">
+                        <p:panelGrid columns="11" styleClass="ui-panelgrid-blank">
+                            <p:outputLabel value="Ordem: "/>
+                            <p:selectOneMenu value="#{controleAcessorio.dao.ordem}">
+                                <f:selectItem itemLabel="Descrição" itemValue="descricao"/>
+                                <f:selectItem itemLabel="ID" itemValue="id"/>
+                                <p:ajax update="listagem"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Filtro: "/>
+                            <p:inputText value="#{controleAcessorio.dao.filtro}" size="20">
+                                <p:ajax event="keyup" delay="400" update="listagem"/>
+                            </p:inputText>
+                            <p:outputLabel value="Itens por página"/>
+                            <p:inputText value="#{controleAcessorio.dao.maximoObjetos}" size="5">
+                                <p:ajax event="keyup" update="listagem"/>
+                            </p:inputText>
+                            <p:commandButton value="Filtrar" icon="ui-icon-search" update="listagem"/>
+                            <p:commandButton icon="ui-icon-seek-first" update="listagem" actionListener="#{controleAcessorio.dao.primeiro()}"/>
+                            <p:commandButton icon="ui-icon-seek-prev" update="listagem" actionListener="#{controleAcessorio.dao.anterior()}"/>
+                            <p:commandButton icon="ui-icon-seek-next" update="listagem" actionListener="#{controleAcessorio.dao.proximo()}"/>
+                            <p:commandButton icon="ui-icon-seek-end" update="listagem" actionListener="#{controleAcessorio.dao.ultimo()}"/>
+                        </p:panelGrid>
+                    </div>
+                    
+                    
+                    <p:dataTable id="listagem" value="#{controleAcessorio.dao.listaObjetos}" var="obj" reflow="true">
                         <!-- o valor do atributo value deve apontar para uma lista -->
+                        <f:facet name="header">
+                            <p:outputLabel value="Listagem de Acessório"/>
+                        </f:facet>
+                        <f:facet name="footer">
+                            <p:outputLabel value="#{controleAcessorio.dao.mensagemNavegacao}"/>
+                        </f:facet>
                         <p:column headerText="ID" width="35">
                             <p:outputLabel value="#{obj.id}"/>
                         </p:column>
@@ -27,18 +60,59 @@
                         </p:column>
                         <p:column headerText="Ações" width="100">
                             <div align="center">
-                                <p:commandButton action="#{controleAcessorio.editar(obj.id)}"
-                                                 icon="ui-icon-pencil" ajax="false" title="Editar"/>
+                                <p:commandButton actionListener="#{controleAcessorio.editar(obj.id)}"
+                                                 icon="ui-icon-pencil"
+                                                 title="Editar"
+                                                 update=":formEdicao"
+                                                 process="@this"
+                                                 oncomplete="PF('dlg').show();"/>
                                 <p:commandButton action="#{controleAcessorio.remover(obj.id)}"
-                                                 icon="ui-icon-trash" title="Remover"
-                                                 process="@form" update="@form"
+                                                 icon="ui-icon-trash"
+                                                 title="Remover"
+                                                 process="@form"
+                                                 update="@form"
                                                  onclick="if (!confirm('Confirma a exclusão?'))
                                                              return false"/>
+
                             </div>
                         </p:column>
                     </p:dataTable>
                 </h:panelGroup>
             </h:form>
+        </ui:define>
+        <ui:define name="dialogos">
+            <p:dialog header="Edição de Acessórios"
+                      widgetVar="dlg"
+                      resizable="false"
+                      modal="true"
+                      width="600"
+                      height="500">
+                <h:form id="formEdicao">
+                    <p:growl id="growl"/>
+                    <div align="center">
+                        <p:panelGrid columns="2">
+                            <f:facet name="footer">
+                                <div align="center" style="padding: 16px;">
+                                    <p:commandButton value="Salvar"
+                                                     actionListener="#{controleAcessorio.salvar()}"
+                                                     update=":formListagem formEdicao"
+                                                     icon="ui-icon-disk"
+                                                     oncomplete="if (!args.validationFailed) { PF('dlg').hide(); }"/>
+                                </div>
+                            </f:facet>
+
+                            <p:outputLabel value="ID" rendered="#{controleAcessorio.objeto.id != null}"/>
+                            <p:inputText value="#{controleAcessorio.objeto.id}" size="5" readonly="true"
+                                         rendered="#{controleAcessorio.objeto.id != null}"/>
+
+                            <p:outputLabel value="Descrição" for="txtDescricao"/>
+                            <p:inputText id="txtDescricao" value="#{controleAcessorio.objeto.descricao}"
+                                         size="50" maxlength="100" autocomplete="off"
+                                         placeholder="Obrigatório"/>  
+                        </p:panelGrid>
+                    </div>
+                </h:form>
+            </p:dialog>
         </ui:define>
     </ui:composition>    
 

@@ -18,7 +18,7 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class ControleAcessorio implements Serializable {
     
-    private AcessorioDAO dao;
+    private AcessorioDAO<Acessorio> dao;
     private Acessorio objeto;
     // private EstadoDAO daoEstado;
     
@@ -31,28 +31,26 @@ public class ControleAcessorio implements Serializable {
         return "/privado/acessorio/listar?faces-redirect=true";
     }
     
-    public String novo(){
-        objeto = new Acessorio();
-        return "formulario?faces-redirect=true";
+    public void novo(){
+        objeto = new Acessorio();        
     }
     
-    public String salvar(){
-        if (dao.salvar(objeto)){
+    public void salvar(){
+        boolean persistiu;
+        if (objeto.getId() == null) {
+            persistiu = dao.persist(objeto);
+        } else {
+            persistiu = dao.merge(objeto);
+        }
+        if (persistiu){
             Util.mensagemInformacao(dao.getMensagem());
-            return "listar?faces-redirect=true";
         } else {
             Util.mensagemErro(dao.getMensagem());
-            return "formulario?faces-redirect=true";
         }
     }
     
-    public String cancelar(){
-        return "listar?faces-redirect=true";
-    }
-    
-    public String editar(Integer id){
-        objeto = dao.localizar(id);
-        return "formulario?faces-redirect=true";
+    public void editar(Integer id){
+        objeto = dao.localizar(id);     
     }
     
     public void remover(Integer id){
@@ -79,13 +77,5 @@ public class ControleAcessorio implements Serializable {
     public void setObjeto(Acessorio objeto) {
         this.objeto = objeto;
     }
-
-//    public EstadoDAO getDaoEstado() {
-//        return daoEstado;
-//    }
-//
-//    public void setDaoEstado(EstadoDAO daoEstado) {
-//        this.daoEstado = daoEstado;
-//    }
 
 }

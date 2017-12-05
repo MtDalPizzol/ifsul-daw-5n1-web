@@ -16,6 +16,10 @@
                         <b:navbarLinks>
                             <b:navLink value="Inicio" outcome="inicio" />
                             <b:dropMenu value="Cadastros">
+                                <b:navCommandLink value="Seguros"
+                                                  ajax="false"
+                                                  action="#{controleSeguro.listar()}"
+                                                  />
                                 <b:navCommandLink value="Pessoas"
                                                   ajax="false"
                                                   action="#{controlePessoa.listar()}"
@@ -38,6 +42,9 @@
                 </h:form>
                 <ui:insert name="conteudo">
                     Pages contents
+                </ui:insert>
+                <ui:insert name="dialogos">
+
                 </ui:insert>
             </b:container>        
         </h:body>

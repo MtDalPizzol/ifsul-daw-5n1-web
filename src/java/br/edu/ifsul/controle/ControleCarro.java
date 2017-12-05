@@ -3,6 +3,7 @@ package br.edu.ifsul.controle;
 import br.edu.ifsul.dao.AcessorioDAO;
 import br.edu.ifsul.dao.CarroDAO;
 import br.edu.ifsul.dao.PessoaDAO;
+import br.edu.ifsul.modelo.Acessorio;
 import br.edu.ifsul.modelo.Carro;
 import br.edu.ifsul.util.Util;
 import java.io.Serializable;
@@ -18,55 +19,76 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "controleCarro")
 @SessionScoped
 public class ControleCarro implements Serializable {
-    
-    private CarroDAO dao;
+
+    private CarroDAO<Carro> dao;
     private Carro objeto;
     private PessoaDAO daoPessoa;
     private AcessorioDAO daoAcessorio;
-    
-    public ControleCarro(){
+    private Acessorio acessorio;
+    private Boolean novoAcessorio;
+
+    public ControleCarro() {
         dao = new CarroDAO();
         daoPessoa = new PessoaDAO();
         daoAcessorio = new AcessorioDAO();
     }
+
+    public void adicionarAcessorio() {
+        if (acessorio == null) {
+            return;
+        }
+        
+        if (objeto.getAcessorios().contains(acessorio)) {
+            Util.mensagemErro("Acessórios já está na lista de acessórios do carro");
+            return;
+        }
+        
+        objeto.getAcessorios().add(acessorio);
+        Util.mensagemInformacao("Acessório adicionado");
+    }
     
-    public String listar(){
+    public void removerAcessorio(int index) {
+        objeto.getAcessorios().remove(index);
+        Util.mensagemInformacao("Acessório removido");
+    }
+    
+    
+    public String listar() {
         return "/privado/carro/listar?faces-redirect=true";
     }
-    
-    public String novo(){
+
+    public void novo() {
         objeto = new Carro();
-        return "formulario?faces-redirect=true";
-    }
+    }    
     
-    public String salvar(){
-        if (dao.salvar(objeto)){
-            Util.mensagemInformacao(dao.getMensagem());
-            return "listar?faces-redirect=true";
+    public void salvar() {
+        boolean persistiu;
+        if (objeto.getId() == null) {
+            persistiu = dao.persist(objeto);
         } else {
-            Util.mensagemErro(dao.getMensagem());
-            return "formulario?faces-redirect=true";
+            persistiu = dao.merge(objeto);
         }
-    }
-    
-    public String cancelar(){
-        return "listar?faces-redirect=true";
-    }
-    
-    public String editar(Integer id){
-        objeto = dao.localizar(id);
-        return "formulario?faces-redirect=true";
-    }
-    
-    public void remover(Integer id){
-        objeto = dao.localizar(id);
-        if (dao.remover(objeto)){
+        if (persistiu) {
             Util.mensagemInformacao(dao.getMensagem());
         } else {
             Util.mensagemErro(dao.getMensagem());
         }
     }
-    
+
+    public void editar(Integer id) {
+        objeto = dao.localizar(id);
+    }
+
+    public void remover(Integer id) {
+        objeto = dao.localizar(id);
+        if (dao.remover(objeto)) {
+            Util.mensagemInformacao(dao.getMensagem());
+        } else {
+            Util.mensagemErro(dao.getMensagem());
+        }
+
+    }
+
     public CarroDAO getDao() {
         return dao;
     }
@@ -97,6 +119,22 @@ public class ControleCarro implements Serializable {
 
     public void setDaoAcessorio(AcessorioDAO daoAcessorio) {
         this.daoAcessorio = daoAcessorio;
+    }
+
+    public Acessorio getAcessorio() {
+        return acessorio;
+    }
+
+    public void setAcessorio(Acessorio acessorio) {
+        this.acessorio = acessorio;
+    }
+
+    public Boolean getNovoAcessorio() {
+        return novoAcessorio;
+    }
+
+    public void setNovoAcessorio(Boolean novoAcessorio) {
+        this.novoAcessorio = novoAcessorio;
     }
 
 }

@@ -3,21 +3,63 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="/templates/template.xhtml">
         <ui:define name="titulo">Listagem de Carros</ui:define>
         <ui:define name="conteudo">
-            <h:form>
+            <h:form id="formListagem">
                 <h:panelGroup>
                     <p:messages/>
                     <p:growl/>
-                    <p:panelGrid columns="2" layout="grid" columnClasses="ui-grid-col-6, ui-grid-col-6" styleClass="ui-panelgrid-blank" style="margin-bottom: 15px;">
-                        <h3>Listagem de Carros</h3>
-                        <p:commandButton value="Adicionar carro" action="#{controleCarro.novo()}"
-                                         ajax="false" icon="ui-icon-plus"
-                                         style="float: right; margin-top: 20px;"/>
-                    </p:panelGrid>
-                    <p:dataTable value="#{controleCarro.dao.lista}" var="obj" reflow="true">
+                    <p:commandButton value="Novo carro"
+                                     actionListener="#{controleCarro.novo()}"
+                                     icon="ui-icon-plus"
+                                     process="@this"
+                                     update=":formEdicao"
+                                     oncomplete="PF('dlg').show();"/>
+
+                    <div align="center" style="padding: 16px;">
+                        <p:panelGrid columns="11" styleClass="ui-panelgrid-blank">
+                            <p:outputLabel value="Ordem: "/>
+                            <p:selectOneMenu value="#{controleCarro.dao.ordem}">
+                                <f:selectItem itemLabel="ID" itemValue="id"/>
+                                <f:selectItem itemLabel="Placa" itemValue="placa"/>
+                                <f:selectItem itemLabel="Renavam" itemValue="renavam"/>
+                                <f:selectItem itemLabel="Fabricante" itemValue="fabricante"/>
+                                <f:selectItem itemLabel="Modelo" itemValue="modelo"/>
+                                <f:selectItem itemLabel="Ano de fabricação" itemValue="anoFabricacao"/>
+                                <f:selectItem itemLabel="Ano do modelo" itemValue="anoModelo"/>
+                                <p:ajax update="listagem"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Filtro: "/>
+                            <p:inputText value="#{controleCarro.dao.filtro}" size="20">
+                                <p:ajax event="keyup" delay="400" update="listagem"/>
+                            </p:inputText>
+                            <p:outputLabel value="Itens por página"/>
+                            <p:inputText value="#{controleCarro.dao.maximoObjetos}" size="5">
+                                <p:ajax event="keyup" update="listagem"/>
+                            </p:inputText>
+                            <p:commandButton value="Filtrar" icon="ui-icon-search" update="listagem"/>
+                            <p:commandButton icon="ui-icon-seek-first" update="listagem" actionListener="#{controleCarro.dao.primeiro()}"/>
+                            <p:commandButton icon="ui-icon-seek-prev" update="listagem" actionListener="#{controleCarro.dao.anterior()}"/>
+                            <p:commandButton icon="ui-icon-seek-next" update="listagem" actionListener="#{controleCarro.dao.proximo()}"/>
+                            <p:commandButton icon="ui-icon-seek-end" update="listagem" actionListener="#{controleCarro.dao.ultimo()}"/>
+                        </p:panelGrid>
+                    </div>
+
+
+                    <p:dataTable
+                        id="listagem"
+                        value="#{controleCarro.dao.listaObjetos}"
+                        var="obj"
+                        reflow="true">
+                        <f:facet name="header">
+                            <p:outputLabel value="Listagem de Carros"/>
+                        </f:facet>
+                        <f:facet name="footer">
+                            <p:outputLabel value="#{controleCarro.dao.mensagemNavegacao}"/>
+                        </f:facet>                        
                         <!-- o valor do atributo value deve apontar para uma lista -->
                         <p:column headerText="ID" width="35">
                             <p:outputLabel value="#{obj.id}"/>
@@ -27,6 +69,9 @@
                         </p:column>
                         <p:column headerText="Renavam" width="115">
                             <p:outputLabel value="#{obj.renavam}"/>
+                        </p:column>
+                        <p:column headerText="Proprietário">
+                            <p:outputLabel value="#{obj.proprietario.nome}"/>
                         </p:column>
                         <p:column headerText="Fabricante">
                             <p:outputLabel value="#{obj.fabricante}"/>
@@ -42,11 +87,17 @@
                         </p:column>
                         <p:column headerText="Ações" width="100">
                             <div align="center">
-                                <p:commandButton action="#{controleCarro.editar(obj.id)}"
-                                                 icon="ui-icon-pencil" ajax="false" title="Editar"/>
+                                <p:commandButton actionListener="#{controleCarro.editar(obj.id)}"
+                                                 icon="ui-icon-pencil"
+                                                 title="Editar"
+                                                 update=":formEdicao"
+                                                 process="@this"
+                                                 oncomplete="PF('dlg').show();"/>
                                 <p:commandButton action="#{controleCarro.remover(obj.id)}"
-                                                 icon="ui-icon-trash" title="Remover"
-                                                 process="@form" update="@form"
+                                                 icon="ui-icon-trash"
+                                                 title="Remover"
+                                                 process="@form"
+                                                 update="@form"
                                                  onclick="if (!confirm('Confirma a exclusão?'))
                                                              return false"/>
                             </div>
@@ -54,6 +105,116 @@
                     </p:dataTable>
                 </h:panelGroup>
             </h:form>
+        </ui:define>
+        <ui:define name="dialogos">
+            <p:dialog header="Edição de carros"
+                      widgetVar="dlg"
+                      resizable="false"
+                      modal="true"
+                      width="600"
+                      height="500">
+                <h:form id="formEdicao">
+                    <p:growl id="growl"/>
+                    <p:tabView id="tab">
+
+                        <p:tab title="Dados principais">
+                            <div align="center">
+                                <p:panelGrid columns="2">
+                                    <f:facet name="footer">
+                                        <div align="center" style="padding: 16px;">
+                                            <p:commandButton value="Salvar"
+                                                             actionListener="#{controleCarro.salvar()}"
+                                                             update=":formListagem formEdicao"
+                                                             icon="ui-icon-disk"
+                                                             oncomplete="if (!args.validationFailed) { PF('dlg').hide(); }"/>
+                                        </div>
+                                    </f:facet>
+                                    <p:outputLabel value="ID" rendered="#{controleCarro.objeto.id != null}"/>
+                                    <p:inputText value="#{controleCarro.objeto.id}" size="5" readonly="true"
+                                                 rendered="#{controleCarro.objeto.id != null}"/>
+                                    <p:outputLabel value="Fabricante" for="txtFabricante"/>
+                                    <p:inputText id="txtFabricante" value="#{controleCarro.objeto.fabricante}"
+                                                 size="20" maxlength="20" autocomplete="off"
+                                                 placeholder="Obrigatório"/>
+                                    <p:outputLabel value="Modelo" for="txtModelo"/>
+                                    <p:inputText id="txtModelo" value="#{controleCarro.objeto.modelo}"
+                                                 size="20" maxlength="20" autocomplete="off"
+                                                 placeholder="Obrigatório"/>
+                                    <p:outputLabel value="Placa" for="txtPlaca"/>
+                                    <p:inputText id="txtPlaca" value="#{controleCarro.objeto.placa}"
+                                                 size="8" maxlength="8" autocomplete="off"
+                                                 placeholder="Obrigatório"/>
+                                    <p:outputLabel value="Renavam" for="txtRenavam"/>
+                                    <p:inputText id="txtRenavam" value="#{controleCarro.objeto.renavam}"
+                                                 size="11" maxlength="11" autocomplete="off"
+                                                 placeholder="Obrigatório"/>
+                                    <p:outputLabel value="Ano modelo" for="txtAnoModelo"/>
+                                    <p:inputText id="txtAnoModelo" value="#{controleCarro.objeto.anoModelo}"
+                                                 size="4" maxlength="4" autocomplete="off"
+                                                 placeholder="Obrigatório"/>
+                                    <p:outputLabel value="Ano de fabricação" for="txtAnoFabricacao"/>
+                                    <p:inputText id="txtAnoFabricacao" value="#{controleCarro.objeto.anoFabricacao}"
+                                                 size="4" maxlength="4" autocomplete="off"
+                                                 placeholder="Obrigatório"/>
+
+                                    <p:outputLabel value="Proprietário" for="selectProprietario"/>                           
+                                    <p:selectOneMenu id="selectProprietario" value="#{controleCarro.objeto.proprietario}">
+                                        <f:converter converterId="converterPessoa"/>
+                                        <f:selectItem noSelectionOption="true" itemLabel="Selecione o proprietário"/>
+                                        <f:selectItems value="#{controleCarro.daoPessoa.lista}" var="e" itemLabel="#{e.nome}"/>
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                            </div>
+                        </p:tab>
+
+                        <p:tab title="Acessórios">
+                            <p:dataTable
+                                value="#{controleCarro.objeto.acessorios}"
+                                var="ace"
+                                rowIndexVar="idxAce"
+                                id="listaAcessorios">
+                                <f:facet name="header">
+                                    <p:panelGrid columns="2">
+                                        <p:selectOneMenu
+                                            value="#{controleCarro.acessorio}"
+                                            id="selectAcessorio">
+                                            <f:converter converterId="converterAcessorio"/>
+                                            <f:selectItem
+                                                noSelectionOption="true"
+                                                itemLabel="Selecione um registro"/>
+                                            <f:selectItems
+                                                value="#{controleCarro.daoAcessorio.listaTodos}"
+                                                var="acessorio"
+                                                itemLabel="#{acessorio.descricao}"/>
+                                        </p:selectOneMenu>
+                                        <p:commandButton
+                                            value="Adicionar acessório"
+                                            actionListener="#{controleCarro.adicionarAcessorio()}"
+                                            id="btnAdicionarAcessorio"
+                                            update="listaAcessorios :formEdicao:growl"
+                                            process="selectAcessorio btnAdicionarAcessorio"
+                                            icon="ui-icon-plus"/>
+                                    </p:panelGrid>
+                                </f:facet>
+                                <p:column
+                                    headerText="Acessório">
+                                    <p:outputLabel
+                                        value="#{ace.descricao}"/>
+                                </p:column>
+                                <p:column
+                                    headerText="Ações">
+                                    <div align="center">
+                                        <p:commandButton
+                                            icon="ui-icon-trash"
+                                            actionListener="#{controleCarro.removerAcessorio(idxAce)}"
+                                            process="@this" update="listaAcessorios :formEdicao:growl"/>
+                                    </div>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                    </p:tabView>
+                </h:form>
+            </p:dialog>
         </ui:define>
     </ui:composition>    
 

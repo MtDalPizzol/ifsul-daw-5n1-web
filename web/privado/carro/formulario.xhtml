@@ -12,12 +12,12 @@
                 <div align="center">
                     <p:messages/>
                     <p:growl/>
-                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                    <p:panelGrid columns="2">
                         <f:facet name="header">
                             <p:outputLabel value="Edição de Carros"/>
                         </f:facet>
                         <f:facet name="footer">
-                            <div align="center">
+                            <div align="center" style="padding: 10px;">
                                 <p:commandButton value="Cancelar"
                                                  action="#{controleCarro.cancelar()}"
                                                  ajax="false" immediate="true"/>
